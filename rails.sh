@@ -3,8 +3,12 @@
 #Dec 27, 2017
 #This script installs Git, Ebenv, Ruby, Rails, Nodejs, and Postgresql on Ubuntu 16.04. 
 
+#May 14, 2018
+#Modified script to work in 1 go with xdotools on Ubuntu 18.04. Also updated versions of programs to install. 
 
 #Remember to chmod u+x filename.sh
+
+cd ~
 
 GITINSTALLED="Not Installed"
 RBENVINSTALLED="Not Installed"
@@ -27,7 +31,7 @@ echo_status()
 
 
 #Update
-sudo apt-get update
+#sudo apt-get update
 
 #Install Git
 yes | sudo apt-get install git
@@ -40,27 +44,37 @@ GITINSTALLED="Installed"
 #Install rbenv dependencies
 yes | sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev
 
+#Installs xdotool to automatically type commands for completing script. Workaround for not being able to source bashrc midscript. 
+yes | sudo apt-get install xdotool
+
+function source_and_rerun
+{
+	xdotool type 'source ~/.bashrc'
+	xdotool key Return
+	xdotool type 'sh rails.sh'
+	xdotool key Return
+}
+
 #Might need to chance .bashrc to .bash_profile when sshing into aws
 #Install RVM
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source ~/.bashrc
 
 #Check if rbenv is installed properly. If rbenv is a function, then ok
-type rbenv >/dev/null 2>&1 || { echo >&2 "Script requires rbenv, but it's not installed.  Aborting. "; echo_status; echo " "; echo "Rbenv may have installed, but is not found. Reload the profile by typing source ~/.bashrc and run the script again. "; $SHELL; }
+type rbenv >/dev/null 2>&1 || { echo >&2 "Script requires rbenv, but it's not installed.  Aborting. "; echo_status; echo " "; echo "Rbenv may have installed, but is not found. Reload the profile by typing source ~/.bashrc and run the script again. "; source_and_rerun; }
 RBENVINSTALLED="Installed"
 
 
 #Install ruby-build to run rbenv install
 git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 
-#rbenv install -l to list version available. 2.3.1 was used at time when this was written
-rbenv install 2.3.1
-rbenv global 2.3.1
+#rbenv install -l to list version available. 2.5.1 was used at time when this was written
+rbenv install --verbose 2.5.1
+rbenv global --verbose 2.5.1
 
 #Check is ruby was installed properly. If ruby exists, then ok
-type ruby >/dev/null 2>&1 || { echo >&2 "Script requires ruby, but it's not installed.  Aborting."; echo_status; $SHELL; }
+type ruby >/dev/null 2>&1 || { echo >&2 "Script requires ruby, but it's not installed.  Aborting."; echo_status; source_and_rerun; }
 RUBYINSTALLED="Installed"
 
 #Disable generation of lcoal documentation after every gem
@@ -105,6 +119,8 @@ yes | sudo apt-get install postgresql postgresql-contrib libpq-dev
 #Check if postgresql is installed properly. If pg is a function, then ok
 type pg >/dev/null 2>&1 || { echo >&2 "Script requires postgresql, but it's not installed.  Aborting."; echo_status; $SHELL; }
 POSTGRESQLINSTALLED="Installed"
+
+sudo apt-get update
 
 echo_status
 echo " "
