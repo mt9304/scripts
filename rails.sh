@@ -8,8 +8,6 @@
 
 #Remember to chmod u+x filename.sh
 
-cd ~
-
 GITINSTALLED="Not Installed"
 RBENVINSTALLED="Not Installed"
 RUBYINSTALLED="Not Installed"
