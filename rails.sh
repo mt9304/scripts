@@ -40,7 +40,7 @@ GITINSTALLED="Installed"
 
 
 #Install rbenv dependencies
-yes | sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev
+yes | sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm-dev
 
 #Installs xdotool to automatically type commands for completing script. Workaround for not being able to source bashrc midscript. 
 yes | sudo apt-get install xdotool
