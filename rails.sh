@@ -68,8 +68,8 @@ RBENVINSTALLED="Installed"
 git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 
 #rbenv install -l to list version available. 2.5.1 was used at time when this was written
-rbenv install --verbose 2.5.1
-rbenv global --verbose 2.5.1
+rbenv install 2.5.1
+rbenv global 2.5.1
 
 #Check is ruby was installed properly. If ruby exists, then ok
 type ruby >/dev/null 2>&1 || { echo >&2 "Script requires ruby, but it's not installed.  Aborting."; echo_status; source_and_rerun; }
