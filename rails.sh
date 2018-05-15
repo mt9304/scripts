@@ -127,4 +127,8 @@ echo_status
 echo " "
 echo "The installs have completed successfuly. "
 
+#If using sqlite3 for local dev, make sure to run: 
+#apt-get install libsqlite3-dev
+#Otherwise creating new rails app might fail. 
+
 $SHELL
