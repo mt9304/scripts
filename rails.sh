@@ -115,7 +115,7 @@ cd ~
 yes | sudo apt-get install postgresql postgresql-contrib libpq-dev
 
 #Check if postgresql is installed properly. If pg is a function, then ok
-type pg >/dev/null 2>&1 || { echo >&2 "Script requires postgresql, but it's not installed.  Aborting."; echo_status; $SHELL; }
+type psql >/dev/null 2>&1 || { echo >&2 "Script requires postgresql, but it's not installed.  Aborting."; echo_status; $SHELL; }
 POSTGRESQLINSTALLED="Installed"
 
 sudo apt-get update
