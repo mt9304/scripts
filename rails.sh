@@ -118,6 +118,9 @@ yes | sudo apt-get install postgresql postgresql-contrib libpq-dev
 type psql >/dev/null 2>&1 || { echo >&2 "Script requires postgresql, but it's not installed.  Aborting."; echo_status; $SHELL; }
 POSTGRESQLINSTALLED="Installed"
 
+echo uninstalling xdotool
+yes | sudo apt-get remove xdotool
+
 sudo apt-get update
 
 echo_status
@@ -125,4 +128,3 @@ echo " "
 echo "The installs have completed successfuly. "
 
 $SHELL
-
