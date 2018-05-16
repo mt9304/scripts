@@ -79,7 +79,7 @@ RUBYINSTALLED="Installed"
 echo "gem: --no-document" > ~/.gemrc
 
 #Install bundler gem
-gem install bundler
+gem install bundler -v 1.16.0
 
 #Check is bundler was installed properly. If bundler exists, then ok
 type bundler >/dev/null 2>&1 || { echo >&2 "Script requires bundler, but it's not installed.  Aborting."; echo_status; $SHELL; }
@@ -88,7 +88,7 @@ BUNDLERINSTALLED="Installed"
 #gem env home to check where gems are being installed
 
 #Install rails
-gem install rails
+gem install rails -v 5.2.0
 rbenv rehash
 
 #Check rails. Rails 5.1.4
