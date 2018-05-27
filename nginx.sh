@@ -177,8 +177,12 @@ mkdir -p shared/pids shared/sockets shared/log
 
 #Generate Upstart Scripts.
 cd ~
-wget https://raw.githubusercontent.com/puma/puma/master/tools/jungle/upstart/puma-manager.conf
-wget https://raw.githubusercontent.com/puma/puma/master/tools/jungle/upstart/puma.conf
+#wget https://raw.githubusercontent.com/puma/puma/master/tools/jungle/upstart/puma-manager.conf
+#wget https://raw.githubusercontent.com/puma/puma/master/tools/jungle/upstart/puma.conf
+
+#Changed to my own repo in case anything happens to the other one. 
+wget https://raw.githubusercontent.com/mt9304/scripts/master/extscripts/puma-manager.conf
+wget https://raw.githubusercontent.com/mt9304/scripts/master/extscripts/puma.conf
 
 #Replace puma.conf user and group for machine, where ubuntu is username and group. Can type group to check. 
 #setuid ubuntu
