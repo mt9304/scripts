@@ -45,11 +45,19 @@ yes | sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev
 #Installs xdotool to automatically type commands for completing script. Workaround for not being able to source bashrc midscript. 
 yes | sudo apt-get install xdotool
 
-function source_and_rerun
+function source_and_rerun_rbenv
 {
 	xdotool type 'source ~/.bashrc'
 	xdotool key Return
-	xdotool type 'sh rails.sh'
+	xdotool type 'sh rails.sh rbenv'
+	xdotool key Return
+}
+
+function source_and_rerun_ruby
+{
+	xdotool type'source ~/.bashrc'
+	xdotool key Return
+	xdotool type 'sh rails.sh rbenv ruby'
 	xdotool key Return
 }
 
@@ -60,7 +68,7 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 
 #Check if rbenv is installed properly. If rbenv is a function, then ok
-type rbenv >/dev/null 2>&1 || { echo >&2 "Script requires rbenv, but it's not installed.  Aborting. "; echo_status; echo " "; echo "Rbenv may have installed, but is not found. Reload the profile by typing source ~/.bashrc and run the script again. "; source_and_rerun; }
+type rbenv >/dev/null 2>&1 || { echo >&2 "Script requires rbenv, but it's not installed.  Aborting. "; echo_status; echo " "; echo "Rbenv may have installed, but is not found. Reload the profile by typing source ~/.bashrc and run the script again. "; if [ "$1" != "rbenv" ] ; then source_and_rerun_rbenv; else echo "Script was re-ran after re-sourcing bashrc, but still could not find rbevv. "; fi ; }
 RBENVINSTALLED="Installed"
 
 
@@ -72,7 +80,7 @@ rbenv install 2.5.1
 rbenv global 2.5.1
 
 #Check is ruby was installed properly. If ruby exists, then ok
-type ruby >/dev/null 2>&1 || { echo >&2 "Script requires ruby, but it's not installed.  Aborting."; echo_status; source_and_rerun; }
+type ruby >/dev/null 2>&1 || { echo >&2 "Script requires ruby, but it's not installed.  Aborting."; echo_status; if [ "$2" != "ruby"] ; then source_and_rerun_ruby ; else echo "Script was re-ran after re-sourcing bashrc, but still could not find rbevv. "; fi ; }
 RUBYINSTALLED="Installed"
 
 #Disable generation of lcoal documentation after every gem
