@@ -7,6 +7,9 @@
 #Modified script to work in 1 go with xdotools on Ubuntu 18.04. Also updated versions of programs to install. 
 
 #Remember to chmod u+x filename.sh
+#If using sqlite3 for dev, remember to run: 
+#sudo apt-get install libsqlite3-dev
+
 
 GITINSTALLED="Not Installed"
 RBENVINSTALLED="Not Installed"
