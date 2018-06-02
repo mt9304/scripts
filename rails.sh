@@ -10,6 +10,9 @@
 #If using sqlite3 for dev, remember to run: 
 #sudo apt-get install libsqlite3-dev
 
+#And for sqlitebrowser: 
+#sudo add-apt-repository -y ppa:linuxgndu/sqlitebrowser
+#yes | sudo apt-get install sqlitebrowser
 
 GITINSTALLED="Not Installed"
 RBENVINSTALLED="Not Installed"
