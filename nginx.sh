@@ -31,8 +31,11 @@ read APP_NAME
 #echo "Enter the Current User and press [ENTER]: "
 #read USER
 
-echo "The username used the database and server settings will be $USER, please type its password and press [ENTER]: "
+echo "The username used for the database and server settings will be $USER, please type its password and press [ENTER]: "
 read DB_PASS
+
+echo "If you have setup SMTP in /config/environments/production.rb, with password field ENV['SMTP_PASS'], please type the account's password and press [ENTER]: "
+read SMTP_PASS
 
 echo "Enter the Github's application name (the name at the end of the Github URL) and press [ENTER}: "
 read GIT_NAME
@@ -125,6 +128,7 @@ cat >.rbenv-vars <<EOL
   SECRET_KEY_BASE=$DB_SECRET
   ${APP_NAME}_DATABASE_USER=${USER}
   ${APP_NAME}_DATABASE_PASSWORD=${DB_PASS}
+  SMTP_PASS=${SMTP_PASS}
 EOL
 
 #To run and check
