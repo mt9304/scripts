@@ -40,11 +40,12 @@ mysql -e "DROP USER ''@'$(hostname)'"
 # Kill off the demo database
 mysql -e "DROP DATABASE test"
 # Use password for connecting to database
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+#ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'CHANGEME';"
 # Make our changes take effect
 mysql -e "FLUSH PRIVILEGES"
 # Any subsequent tries to run queries this way will get access denied because lack of usr/pwd param
-mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'CHANGEME';"
+#mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'CHANGEME';"
 echo "Finished running mysql_secure_installation through manual queries. "
 
 #Installing PHP
