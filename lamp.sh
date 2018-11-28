@@ -69,7 +69,7 @@ mysql --user="root" --password="CHANGEME" -e "GRANT ALL ON ${SITENAME}.* TO ${SI
 mysql --user="root" --password="CHANGEME" -e "FLUSH PRIVILEGES;"
 
 sudo apt update
-sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
+yes | sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
 sudo systemctl restart apache2
 
 sudo a2enmod rewrite
