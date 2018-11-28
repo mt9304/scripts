@@ -72,5 +72,98 @@ sudo apt update
 sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
 sudo systemctl restart apache2
 
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+
+#Setting up Wordpress
+sudo mkdir /var/www/$SITENAME
+
+cd /tmp
+
+curl -O https://wordpress.org/latest.tar.gz
+tar xzvf latest.tar.gz
+touch /tmp/wordpress/.htaccess
+mkdir /tmp/wordpress/wp-content/upgrade
+
+WPSALT="$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)"
+
+cat << EOF | sudo tee /tmp/$SITENAME/wp-config.php
+<?php
+/** The name of the database for WordPress */
+define('DB_NAME', 'database_name_here');
+
+/** MySQL database username */
+define('DB_USER', 'username_here');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'password_here');
+
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
+
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+
+/**#@+
+ * Authentication Unique Keys and Salts.
+ *
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+ * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+ *
+ * @since 2.6.0
+ */
+
+${WPSALT}
+define('DB_NAME', '${SITENAME}');
+/** MySQL database username */
+define('DB_USER', '${SITEUSER}');
+/** MySQL database password */
+define('DB_PASSWORD', '${SITEPASS}');
+define('FS_METHOD', 'direct');
+/**#@-*/
+
+/**
+ * WordPress Database Table prefix.
+ *
+ * You can have multiple installations in one database if you give each
+ * a unique prefix. Only numbers, letters, and underscores please!
+ */
+$table_prefix  = 'wp_';
+
+/**
+ * For developers: WordPress debugging mode.
+ *
+ * Change this to true to enable the display of notices during development.
+ * It is strongly recommended that plugin and theme developers use WP_DEBUG
+ * in their development environments.
+ *
+ * For information on other constants that can be used for debugging,
+ * visit the Codex.
+ *
+ * @link https://codex.wordpress.org/Debugging_in_WordPress
+ */
+define('WP_DEBUG', false);
+
+/* That's all, stop editing! Happy blogging. */
+
+/** Absolute path to the WordPress directory. */
+if ( !defined('ABSPATH') )
+        define('ABSPATH', dirname(__FILE__) . '/');
+
+/** Sets up WordPress vars and included files. */
+require_once(ABSPATH . 'wp-settings.php');
+                                          
+EOF
+
+sudo cp -a /tmp/wordpress/. /var/www/$SITENAME
+sudo chown -R www-data:www-data /var/www/$SITENAME
+sudo find /var/www/$SITENAME/ -type d -exec chmod 750 {} \;
+sudo find /var/www/$SITENAME/ -type f -exec chmod 640 {} \;
+
 
 echo "LAMP with Wordpress site installed. Default mysql root password is 'CHANGEME', remember to change this if needed. "
+echo "Remember to change Document root in config file: sudo vi /etc/apache2/sites-available/000-default.conf"
