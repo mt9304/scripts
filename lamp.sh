@@ -22,8 +22,8 @@ sudo ufw allow in "Apache Full"
 #sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password change_this'
 
 
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password CHANGEME'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password CHANGEME'
 
 echo "Installing MySQL Server. "
 sudo apt-get -y install mysql-server
