@@ -2,13 +2,17 @@
 
 #Remember to execute with bash script.sh instead of sh script.sh because default system shell is dash, not bash, and dash does not have the triple angle brackets. 
 
-#echo "Default root password for mysql used it 'CHANGEME', remember to change this if needed. "
+#echo "Default root password for mysql uses 'CHANGEME', remember to change this if needed. "
 echo "Enter your website's name. This will also be used as the database name, and the database/website user will be this name plus '_user'. "
 read SITENAME
 echo "Enter your website's database and admin password. You can change them later. "
 read SITEPASS
 
 SITEUSER=$SITENAME"_user"
+
+##############################################################################################################################
+if [ "$1" = "full" ]; then
+##############################################################################################################################
 
 yes | sudo apt-get update
 yes | sudo apt-get install apache2
@@ -63,6 +67,8 @@ cat << EOF | sudo tee /etc/apache2/mods-enabled/dir.conf
 EOF
 
 sudo systemctl restart apache2
+
+fi
 
 #Wordpress database setup
 mysql --user="root" --password="CHANGEME" -e "CREATE DATABASE ${SITENAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
@@ -168,3 +174,4 @@ sudo find /var/www/$SITENAME/ -type f -exec chmod 640 {} \;
 
 echo "LAMP with Wordpress site installed. Default mysql root password is 'CHANGEME', remember to change this if needed. "
 echo "Remember to change Document root in config file: sudo vi /etc/apache2/sites-available/000-default.conf"
+echo "Then restart the web server: sudo systemctl restart apache2"
