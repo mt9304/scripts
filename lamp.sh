@@ -68,7 +68,9 @@ EOF
 
 sudo systemctl restart apache2
 
+##############################################################################################################################
 fi
+##############################################################################################################################
 
 #Wordpress database setup
 mysql --user="root" --password="CHANGEME" -e "CREATE DATABASE ${SITENAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
