@@ -40,18 +40,18 @@ echo "Finished installing MySQL Server. "
 #Taken from https://stackoverflow.com/questions/24270733/automate-mysql-secure-installation-with-echo-command-via-a-shell-script/35004940
 echo "Running the necessary queries to simulate mysql_secure_installation. "
 # Make sure that NOBODY can access the server without a password
-mysql --user="root" --password="${ROOTDBPASS}" -e "UPDATE mysql.user SET Password = PASSWORD('${ROOTDBPASS}') WHERE User = 'root'"
+mysql --user="root" --password=${ROOTDBPASS} -e "UPDATE mysql.user SET Password = PASSWORD(${ROOTDBPASS}) WHERE User = 'root'"
 # Kill the anonymous users
-mysql --user="root" --password="${ROOTDBPASS}" -e "DROP USER ''@'localhost'"
+mysql --user="root" --password=${ROOTDBPASS} -e "DROP USER ''@'localhost'"
 # Because our hostname varies we'll use some Bash magic here
-mysql --user="root" --password="${ROOTDBPASS}" -e "DROP USER ''@'$(hostname)'"
+mysql --user="root" --password=${ROOTDBPASS} -e "DROP USER ''@'$(hostname)'"
 # Kill off the demo database
-mysql --user="root" --password="${ROOTDBPASS}" -e "DROP DATABASE test"
+mysql --user="root" --password=${ROOTDBPASS} -e "DROP DATABASE test"
 # Use password for connecting to database
 #ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-mysql --user="root" --password="${ROOTDBPASS}" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${ROOTDBPASS}';"
+mysql --user="root" --password=${ROOTDBPASS} -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ${ROOTDBPASS};"
 # Make our changes take effect
-mysql --user="root" --password="${ROOTDBPASS}" -e "FLUSH PRIVILEGES"
+mysql --user="root" --password=${ROOTDBPASS} -e "FLUSH PRIVILEGES"
 # Any subsequent tries to run queries this way will get access denied because lack of usr/pwd param
 #mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${ROOTDBPASS}';"
 echo "Finished running mysql_secure_installation through manual queries. "
@@ -77,9 +77,9 @@ fi
 ##############################################################################################################################
 
 #Wordpress database setup
-mysql --user="root" --password="${ROOTDBPASS}" -e "CREATE DATABASE ${SITENAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
-mysql --user="root" --password="${ROOTDBPASS}" -e "GRANT ALL ON ${SITENAME}.* TO ${SITEUSER}@'localhost' IDENTIFIED BY '${SITEPASS}';"
-mysql --user="root" --password="${ROOTDBPASS}" -e "FLUSH PRIVILEGES;"
+mysql --user="root" --password=${ROOTDBPASS} -e "CREATE DATABASE ${SITENAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+mysql --user="root" --password=${ROOTDBPASS} -e "GRANT ALL ON ${SITENAME}.* TO ${SITEUSER}@'localhost' IDENTIFIED BY '${SITEPASS}';"
+mysql --user="root" --password=${ROOTDBPASS} -e "FLUSH PRIVILEGES;"
 
 sudo apt update
 yes | sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
