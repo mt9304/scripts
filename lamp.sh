@@ -100,7 +100,8 @@ mkdir /tmp/wordpress/wp-content/upgrade
 
 WPSALT="$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)"
 
-: ' wp-config.php file not needed, better to just install through UI.
+: '
+wp-config.php file not needed, better to just install through UI.
 cat << EOF | sudo tee /tmp/wordpress/wp-config.php
 <?php
 /** The name of the database for WordPress */
