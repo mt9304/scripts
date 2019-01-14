@@ -100,6 +100,7 @@ mkdir /tmp/wordpress/wp-content/upgrade
 
 WPSALT="$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)"
 
+: ' wp-config.php file not needed, better to just install through UI.
 cat << EOF | sudo tee /tmp/wordpress/wp-config.php
 <?php
 /** The name of the database for WordPress */
@@ -159,7 +160,9 @@ $table_prefix  = 'wp_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', false);
+ define('WP_DEBUG', false);
+ define('WP_DEBUG_LOG', false);
+ define('WP_POST_REVISIONS', 1);
 
 /* That's all, stop editing! Happy blogging. */
 
@@ -171,6 +174,7 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 
 EOF
+'
 
 sudo cp -a /tmp/wordpress/. /var/www/$SITENAME
 sudo chown -R www-data:www-data /var/www/$SITENAME
