@@ -100,7 +100,7 @@ mkdir /tmp/wordpress/wp-content/upgrade
 
 WPSALT="$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)"
 
-: '
+: <<'END_COMMENT'
 wp-config.php file not needed, better to just install through UI.
 cat << EOF | sudo tee /tmp/wordpress/wp-config.php
 <?php
@@ -175,7 +175,7 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 
 EOF
-'
+END_COMMENT
 
 sudo cp -a /tmp/wordpress/. /var/www/$SITENAME
 sudo chown -R www-data:www-data /var/www/$SITENAME
