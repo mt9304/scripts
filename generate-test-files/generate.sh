@@ -32,16 +32,61 @@ list_of_ethnicities=(
     Caucasian Asian EastAsian WestAsian NorthAsian SouthAsian NorthEastAsian NorthWestAsian SouthEastAsian SouthWestAsian
     );
 
-# Create the file and add headers
-cat <<EOF > test.txt
-FiscalMonth|EmployeeID|LastName|FirstName|JobTitle|Department|BaseSalary|Location0|Ethnicity
+# Create the files and add headers
+cat <<EOF > employee_profile_.txt
+FiscalMonth|EmployeeID|LastName|FirstName|JobTitle|Department|Location0|Ethnicity
 EOF
 
+cat <<EOF > compensation_.txt
+FiscalMonth|EmployeeID|BaseSalary|Currency
+EOF
+
+cat <<EOF > hire_events_.txt
+FiscalMonth|EventDate|EmployeeID|HireReason
+EOF
+
+cat <<EOF > term_events_.txt
+FiscalMonth|EventDate|EmployeeID|TermEvent
+EOF
+
+# Appending randomly generated text to files
 for i in {51243..51542}
 do
-# Date | EID| Last Name                            | First Name                           | Job Title                                | Department                                | BaseSalary                | Location0                               | Ethnicity
-cat <<EOF >> test.txt
-2018-01|${i}|${list_of_names[$((0 + RANDOM % 29))]}|${list_of_names[$((0 + RANDOM % 29))]}|${list_of_job_titles[$((0 + RANDOM % 9))]}|${list_of_departments[$((0 + RANDOM % 4))]}|$((48000 + RANDOM % 85000))|${list_of_countries[$((0 + RANDOM % 4))]}|${list_of_ethnicities[$((0 + RANDOM % 9))]}
+current_date=2018-01
+current_employeeid=${i}
+
+current_first_name=${list_of_names[$((0 + RANDOM % 29))]}
+current_last_name=${list_of_names[$((0 + RANDOM % 29))]}
+current_job_title=${list_of_job_titles[$((0 + RANDOM % 9))]}
+current_department=${list_of_departments[$((0 + RANDOM % 4))]}
+current_location0=${list_of_countries[$((0 + RANDOM % 4))]}
+current_ethnicity=${list_of_ethnicities[$((0 + RANDOM % 9))]}
+
+current_base_salary=$((48000 + RANDOM % 85000))
+current_event_date=
+current_hire_reason=
+current_term_reason=
+
+should_term_if_50=$((0 + RANDOM % 51))
+should_hire_new_if_50=$((0 + RANDOM % 51))
+
+# Date         | Employee ID         | Last Name           | First Name         | Job Title          | Department          | Location0          | Ethnicity
+cat <<EOF >> employee_profile_.txt
+${current_date}|${current_employeeid}|${current_first_name}|${current_last_name}|${current_job_title}|${current_department}|${current_location0}|${current_ethnicity}
+EOF
+
+# Date         | Employee ID         | Base Salary          | Currency
+cat <<EOF >> compensation_.txt
+${current_date}|${current_employeeid}|${current_base_salary}|USD
+EOF
+
+# Date         | Employee ID         | Event Date          | Hire Reason
+cat <<EOF >> hire_events_.txt
+${current_date}|${current_employeeid}|${current_event_date}|current_hire_reason
+EOF
+
+# Date         | Employee ID         | Event Date          | Term Reason
+cat <<EOF >> term_events_.txt
+${current_date}|${current_employeeid}|${current_event_date}|current_term_reason
 EOF
 done
-
