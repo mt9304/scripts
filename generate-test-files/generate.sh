@@ -4,14 +4,14 @@
 #mkdir -p custdata/WFF_a1a esldata/WFF_a1a custdata/WFF_b2b esldata/WFF_b2b;
 # Bi-weekly load folder structure
 #mkdir custdata/WFF_a1a/{20180101,20180201,20180301,20180401,20180501};
-#mkdir esldata/WFF_a1a/{20180101,20180201,20180301,20180401,20180501};
+mkdir esldata/WFF_a1a/{20180101,20180201,20180301,20180401,20180501};
 # Daily load folder structure
 #mkdir custdata/WFF_b2b/{20180101,20180102,20180103,20180104,20180105,20180106,20180107,20180108,20180109,20180110};
 #mkdir esldata/WFF_b2b/{20180101,20180102,20180103,20180104,20180105,20180106,20180107,20180108,20180109,20180110};
 
 # Initialize current directories
 current_dir=$('pwd')
-
+cd esldata/WFF_a1a
 # Arrays of useful words
 list_of_names=(
     Olivia Ruby Emily Grace Jessica Chloe Sophie Lily Amelia Evie
@@ -49,10 +49,9 @@ cat <<EOF > term_events_.txt
 FiscalMonth|EventDate|EmployeeID|TermEvent
 EOF
 
-# For keeping track of termed employees
-touch termed_employees.txt
-
-# Appending randomly generated text to files
+#################################
+# START: Generate initial files #
+#################################
 for i in {51243..51542}
 do
 current_date=2018-01
@@ -66,12 +65,6 @@ current_location0=${list_of_countries[$((0 + RANDOM % 4))]}
 current_ethnicity=${list_of_ethnicities[$((0 + RANDOM % 9))]}
 
 current_base_salary=$((48000 + RANDOM % 85000))
-current_event_date=
-current_hire_reason=
-current_term_reason=
-
-should_term_if_50=$((0 + RANDOM % 51))
-should_hire_new_if_50=$((0 + RANDOM % 51))
 
 # Date         | Employee ID         | Last Name           | First Name         | Job Title          | Department          | Location0          | Ethnicity
 cat <<EOF >> employee_profile_.txt
@@ -82,6 +75,28 @@ EOF
 cat <<EOF >> compensation_.txt
 ${current_date}|${current_employeeid}|${current_base_salary}|USD
 EOF
+done
+
+###############################
+# END: Generate initial files #
+###############################
+
+########################################
+# START: Generate Hire and Term Events #
+########################################
+
+for d in */
+do
+# Generate random hire and term events
+
+employee_to_be_termed=$((51244 + RANDOM % 51541))
+how_many_to_be_termed=$((0 + RANDOM % 5))
+how_many_to_be_hired=$((0 + RANDOM % 5))
+already_termed=();
+current_event_date=
+current_hire_reason=
+current_term_reason=
+
 
 # Date         | Employee ID         | Event Date          | Hire Reason
 cat <<EOF >> hire_events_.txt
@@ -92,4 +107,13 @@ EOF
 cat <<EOF >> term_events_.txt
 ${current_date}|${current_employeeid}|${current_event_date}|current_term_reason
 EOF
+
+
+
 done
+
+cd ${current_dir}
+
+######################################
+# END: Generate Hire and Term Events #
+######################################
