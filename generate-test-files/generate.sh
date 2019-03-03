@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Setup folders
-#mkdir -p custdata/WFF_a1a esldata/WFF_a1a custdata/WFF_b2b esldata/WFF_b2b;
+echo 'Setting up folders..'
+mkdir -p custdata/WFF_a1a esldata/WFF_a1a custdata/WFF_b2b esldata/WFF_b2b;
 # Bi-weekly load folder structure
 #mkdir custdata/WFF_a1a/{20180101,20180201,20180301,20180401,20180501};
 mkdir esldata/WFF_a1a/{20180101,20180201,20180301,20180401,20180501};
@@ -31,6 +32,9 @@ list_of_countries=(
 list_of_ethnicities=(
     Caucasian Asian EastAsian WestAsian NorthAsian SouthAsian NorthEastAsian NorthWestAsian SouthEastAsian SouthWestAsian
     );
+list_of_term_reasons=(
+    Attendance Behaviour Performance Conflict Retirement BetterOffer Unhappy Other
+    );
 
 # Create the files and add headers
 cat <<EOF > employee_profile_.txt
@@ -42,7 +46,7 @@ FiscalMonth|EmployeeID|BaseSalary|Currency
 EOF
 
 cat <<EOF > hire_events_.txt
-FiscalMonth|EventDate|EmployeeID|HireReason
+FiscalMonth|EventDate|EmployeeID
 EOF
 
 cat <<EOF > term_events_.txt
@@ -52,7 +56,7 @@ EOF
 #################################
 # START: Generate initial files #
 #################################
-for i in {51243..51542}
+for i in {51243..51342}
 do
 current_date=2018-01
 current_employeeid=${i}
@@ -87,28 +91,35 @@ done
 
 for d in */
 do
-# Generate random hire and term events
+    # Generate random hire and term events
+    how_many_to_be_termed=$((1 + RANDOM % 10))
+    how_many_to_be_hired=$((1 + RANDOM % 10))
+    already_termed=();
+    current_event_date=${d}
+    current_hire_reason=
+    current_term_reason=
 
-employee_to_be_termed=$((51244 + RANDOM % 51541))
-how_many_to_be_termed=$((0 + RANDOM % 5))
-how_many_to_be_hired=$((0 + RANDOM % 5))
-already_termed=();
-current_event_date=
-current_hire_reason=
-current_term_reason=
+    echo 'Terminating '${how_many_to_be_termed}' employees for '${d}
 
+    for i in $(seq 1 $how_many_to_be_termed)
+    do
+        employee_to_be_termed=$(shuf -i 51244-51341 -n 1)
+        #employee_to_be_termed=$(( ( RANDOM % 51341 )  + 51244 ))
+        current_term_reason=${list_of_term_reasons[$((0 + RANDOM % 7))]}
+        echo 'Terminating '${employee_to_be_termed}' for reason of '${current_term_reason}
+                # Date       | Employee ID            | Event Date          | Term Reason
+        echo $(basename ${d})\|${employee_to_be_termed}\|$(basename ${current_event_date})\|${current_term_reason} >> term_events_.txt
+        already_termed+=(${employee_to_be_termed})
+    done
+
+    mv term_events_.txt ${d}term_events_$(basename ${d}).txt
+    echo 'FiscalMonth\|EventDate\|EmployeeID\|TermEvent' > term_events_.txt
+done
 
 # Date         | Employee ID         | Event Date          | Hire Reason
 cat <<EOF >> hire_events_.txt
 ${current_date}|${current_employeeid}|${current_event_date}|current_hire_reason
 EOF
-
-# Date         | Employee ID         | Event Date          | Term Reason
-cat <<EOF >> term_events_.txt
-${current_date}|${current_employeeid}|${current_event_date}|current_term_reason
-EOF
-
-
 
 done
 
