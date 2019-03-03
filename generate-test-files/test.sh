@@ -43,5 +43,9 @@ array_contains () {
     return $in
 }
 
-array_contains already_termed "two"  && echo yes || echo no
-echo $(array_contains already_termed "twao" && echo yes || echo no)
+if [ $(array_contains already_termed "two" && echo yes || echo no) = 'no' ]; then
+    echo 'add term'
+fi
+
+#array_contains already_termed "two"  && echo yes || echo no
+#echo $(array_contains already_termed "twao" && echo yes || echo no)

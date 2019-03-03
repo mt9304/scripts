@@ -1,5 +1,26 @@
 #!/bin/bash
 
+###########################
+# START: Custom Functions #
+###########################
+
+array_contains () { 
+    local array="$1[@]"
+    local seeking=$2
+    local in=1
+    for element in "${!array}"; do
+        if [[ $element == $seeking ]]; then
+            in=0
+            break
+        fi
+    done
+    return $in
+}
+
+#########################
+# END: Custom Functions #
+#########################
+
 # Setup folders
 echo 'Setting up folders..'
 mkdir -p custdata/WFF_a1a esldata/WFF_a1a custdata/WFF_b2b esldata/WFF_b2b;
@@ -35,6 +56,8 @@ list_of_ethnicities=(
 list_of_term_reasons=(
     Attendance Behaviour Performance Conflict Retirement BetterOffer Unhappy Other
     );
+
+echo 'Setting up employee files. '
 
 # Create the files and add headers
 cat <<EOF > employee_profile_.txt
@@ -103,17 +126,22 @@ do
 
     for i in $(seq 1 $how_many_to_be_termed)
     do
+
         employee_to_be_termed=$(shuf -i 51244-51341 -n 1)
-        #employee_to_be_termed=$(( ( RANDOM % 51341 )  + 51244 ))
-        current_term_reason=${list_of_term_reasons[$((0 + RANDOM % 7))]}
-        echo 'Terminating '${employee_to_be_termed}' for reason of '${current_term_reason}
-                # Date       | Employee ID            | Event Date          | Term Reason
-        echo $(basename ${d})\|${employee_to_be_termed}\|$(basename ${current_event_date})\|${current_term_reason} >> term_events_.txt
-        already_termed+=(${employee_to_be_termed})
+        
+        if [ $(array_contains already_termed ${employee_to_be_termed} && echo yes || echo no) = 'no' ]; then
+            current_term_reason=${list_of_term_reasons[$((0 + RANDOM % 7))]}
+            echo 'Terminating '${employee_to_be_termed}' for reason of '${current_term_reason}
+                     # Date       | Employee ID             | Event Date                       | Term Reason
+            echo $(basename ${d})\|${employee_to_be_termed}\|$(basename ${current_event_date})\|${current_term_reason} >> term_events_.txt
+            already_termed+=(${employee_to_be_termed})
+        else
+            echo 'Employee '${employee_to_be_termed} 'already termed. Skipping record. '
+        fi
     done
 
     mv term_events_.txt ${d}term_events_$(basename ${d}).txt
-    echo 'FiscalMonth\|EventDate\|EmployeeID\|TermEvent' > term_events_.txt
+    echo 'FiscalMonth|EventDate|EmployeeID|TermEvent' > term_events_.txt
 done
 
 # Date         | Employee ID         | Event Date          | Hire Reason
@@ -121,8 +149,8 @@ cat <<EOF >> hire_events_.txt
 ${current_date}|${current_employeeid}|${current_event_date}|current_hire_reason
 EOF
 
-done
-
+# CLeaning up temp files
+rm term_events_.txt
 cd ${current_dir}
 
 ######################################
