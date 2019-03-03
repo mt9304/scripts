@@ -82,12 +82,14 @@ EOF
 emp_iterator=1
 first_emp_id=51243
 last_emp_id=51342
+emp_id_to_start_hiring=$((last_emp_id+1))
 for i in $(seq $first_emp_id $last_emp_id)
 do
 
 echo 'Generating employee '${emp_iterator}'/'$((last_emp_id-first_emp_id+1)) '('${i}')'
 
-current_date=2018-01
+current_date='REPLACEME_FISCALDATE'
+current_event_date='REPLACEME_EVENTDATE'
 current_employeeid=${i}
 
 current_first_name=${list_of_names[$((0 + RANDOM % 29))]}
@@ -159,22 +161,37 @@ do
     done
 
     # For hiring employee
-    emp_id_to_start=$((last_emp_id+1)) # Correct this later
     for i in $(seq 1 $how_many_to_be_hired)
     do
+        current_first_name=${list_of_names[$((0 + RANDOM % 29))]}
+        current_last_name=${list_of_names[$((0 + RANDOM % 29))]}
+        current_job_title=${list_of_job_titles[$((0 + RANDOM % 9))]}
+        current_department=${list_of_departments[$((0 + RANDOM % 4))]}
+        current_location0=${list_of_countries[$((0 + RANDOM % 4))]}
+        current_ethnicity=${list_of_ethnicities[$((0 + RANDOM % 9))]}
+        current_base_salary=$((61000 + RANDOM % 95000))
 
+               # Date         | Event Date      | Employee ID
+        echo $(basename ${d})\|$(basename ${d})\|${emp_id_to_start_hiring} >> hire_events_.txt        
+        
+        # Remember to replace current date in employee profile with directory date, and to modify all
+
+               # Date         | Employee ID              | Base Salary           | Currency
+        echo $(basename ${d})\|${emp_id_to_start_hiring}\|${current_base_salary}\|'USD' >> hire_events_.txt  
+        ((emp_id_to_start_hiring+=1))
     done
 
     # Copying and moving files to dated folders
     cp employee_profile_.txt ${d}employee_profile_$(basename ${d}).txt
     cp compensation_.txt ${d}compensation_$(basename ${d}).txt
     mv term_events_.txt ${d}term_events_$(basename ${d}).txt
+    mv hire_events_.txt ${d}hire_events_$(basename ${d}).txt
     echo 'FiscalMonth|EventDate|EmployeeID|TermEvent' > term_events_.txt
 done
 
-# Date         | Employee ID         | Event Date          | Hire Reason
+# Date         | Event Date          | Employee ID
 cat <<EOF >> hire_events_.txt
-${current_date}|${current_employeeid}|${current_event_date}|current_hire_reason
+${current_date}|${current_employeeid}|${current_event_date}
 EOF
 
 # CLeaning up temp files
