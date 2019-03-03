@@ -79,13 +79,13 @@ EOF
 #################################
 # START: Generate initial files #
 #################################
-emp_iterator=0
+emp_iterator=1
 first_emp_id=51243
 last_emp_id=51342
 for i in $(seq $first_emp_id $last_emp_id)
 do
 
-echo 'Generating employee '${emp_iterator}'/99 ('${i}')'
+echo 'Generating employee '${emp_iterator}'/'$((last_emp_id-first_emp_id+1)) '('${i}')'
 
 current_date=2018-01
 current_employeeid=${i}
@@ -97,7 +97,7 @@ current_department=${list_of_departments[$((0 + RANDOM % 4))]}
 current_location0=${list_of_countries[$((0 + RANDOM % 4))]}
 current_ethnicity=${list_of_ethnicities[$((0 + RANDOM % 9))]}
 
-current_base_salary=$((48000 + RANDOM % 85000))
+current_base_salary=$((61000 + RANDOM % 95000))
 
 # Date         | Employee ID         | Last Name           | First Name         | Job Title          | Department          | Location0          | Ethnicity
 cat <<EOF >> employee_profile_.txt
@@ -132,9 +132,9 @@ do
 
     echo 'Terminating '${how_many_to_be_termed}' employees for '${d}
 
+    # For terminating employee
     for i in $(seq 1 $how_many_to_be_termed)
     do
-
         employee_to_be_termed=$(shuf -i 51244-51341 -n 1)
         
         if [ $(array_contains already_termed ${employee_to_be_termed} && echo yes || echo no) = 'no' ]; then
@@ -142,12 +142,32 @@ do
             echo 'Terminating '${employee_to_be_termed}' for reason of '${current_term_reason}
                      # Date       | Employee ID             | Event Date                       | Term Reason
             echo $(basename ${d})\|${employee_to_be_termed}\|$(basename ${current_event_date})\|${current_term_reason} >> term_events_.txt
+
+            # Removing entry from employee profile file
+            echo 'Removing '${employee_to_be_termed}' from employee file'
+            grep -v ${employee_to_be_termed} employee_profile_.txt > temp_employee_profile && mv temp_employee_profile employee_profile_.txt
+            
+
+            # Removing entry from compensation file
+            echo 'Removing '${employee_to_be_termed}' from compensation file'
+            grep -v ${employee_to_be_termed} compensation_.txt > temp_compensation && mv temp_compensation compensation_.txt
+            
             already_termed+=(${employee_to_be_termed})
         else
             echo 'Employee '${employee_to_be_termed} 'already termed. Skipping record. '
         fi
     done
 
+    # For hiring employee
+    emp_id_to_start=$((last_emp_id+1)) # Correct this later
+    for i in $(seq 1 $how_many_to_be_hired)
+    do
+
+    done
+
+    # Copying and moving files to dated folders
+    cp employee_profile_.txt ${d}employee_profile_$(basename ${d}).txt
+    cp compensation_.txt ${d}compensation_$(basename ${d}).txt
     mv term_events_.txt ${d}term_events_$(basename ${d}).txt
     echo 'FiscalMonth|EventDate|EmployeeID|TermEvent' > term_events_.txt
 done
