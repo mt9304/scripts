@@ -88,7 +88,7 @@ do
 
 echo 'Generating employee '${emp_iterator}'/'$((last_emp_id-first_emp_id+1)) '('${i}')'
 
-current_date='REPLACEME_FISCALDATE'
+current_date='REPLACEME_FISCALMONTH'
 current_event_date='REPLACEME_EVENTDATE'
 current_employeeid=${i}
 
@@ -128,7 +128,10 @@ do
     how_many_to_be_termed=$((1 + RANDOM % 10))
     how_many_to_be_hired=$((1 + RANDOM % 10))
     already_termed=();
-    current_event_date=${d}
+    #current_event_date=${d}
+    current_date=$(basename ${d})
+    current_date_place_holder='REPLACEME_FISCALMONTH'
+    current_event_date='REPLACEME_EVENTDATE'
     current_hire_reason=
     current_term_reason=
 
@@ -142,14 +145,13 @@ do
         if [ $(array_contains already_termed ${employee_to_be_termed} && echo yes || echo no) = 'no' ]; then
             current_term_reason=${list_of_term_reasons[$((0 + RANDOM % 7))]}
             echo 'Terminating '${employee_to_be_termed}' for reason of '${current_term_reason}
-                     # Date       | Employee ID             | Event Date                       | Term Reason
-            echo $(basename ${d})\|${employee_to_be_termed}\|$(basename ${current_event_date})\|${current_term_reason} >> term_events_.txt
+                     # Date      | Employee ID             | Event Date           | Term Reason
+            echo ${current_date}\|${employee_to_be_termed}\|${current_event_date}\|${current_term_reason} >> term_events_.txt
 
             # Removing entry from employee profile file
             echo 'Removing '${employee_to_be_termed}' from employee file'
             grep -v ${employee_to_be_termed} employee_profile_.txt > temp_employee_profile && mv temp_employee_profile employee_profile_.txt
             
-
             # Removing entry from compensation file
             echo 'Removing '${employee_to_be_termed}' from compensation file'
             grep -v ${employee_to_be_termed} compensation_.txt > temp_compensation && mv temp_compensation compensation_.txt
@@ -173,16 +175,16 @@ do
         current_ethnicity=${list_of_ethnicities[$((0 + RANDOM % 9))]}
         current_base_salary=$((61000 + RANDOM % 95000))
 
-               # Date         | Event Date      | Employee ID
-        echo $(basename ${d})\|$(basename ${d})\|${emp_id_to_start_hiring} >> hire_events_.txt        
+               # Date        | Event Date           | Employee ID
+        echo ${current_date}\|${current_event_date}\|${emp_id_to_start_hiring} >> hire_events_.txt        
         
         echo 'Adding '${emp_id_to_start_hiring}' to employee profile file'
-               # Date        | Employee ID              | Last Name            | First Name          | Job Title           | Department           | Location0           | Ethnicity
-        echo ${current_date}\|${emp_id_to_start_hiring}\|${current_first_name}\|${current_last_name}\|${current_job_title}\|${current_department}\|${current_location0}\|${current_ethnicity} >> employee_profile_.txt  
+               # Date                     | Employee ID              | Last Name            | First Name          | Job Title           | Department           | Location0           | Ethnicity
+        echo ${current_date_place_holder}\|${emp_id_to_start_hiring}\|${current_first_name}\|${current_last_name}\|${current_job_title}\|${current_department}\|${current_location0}\|${current_ethnicity} >> employee_profile_.txt  
 
         echo 'Adding '${emp_id_to_start_hiring}' to compensation file'
-               # Date         | Employee ID             | Base Salary           | Currency
-        echo ${current_date}\|${emp_id_to_start_hiring}\|${current_base_salary}\|'USD' >> compensation_.txt
+               # Date                     | Employee ID              | Base Salary           | Currency
+        echo ${current_date_place_holder}\|${emp_id_to_start_hiring}\|${current_base_salary}\|'USD' >> compensation_.txt
         ((emp_id_to_start_hiring+=1))
     done
 
