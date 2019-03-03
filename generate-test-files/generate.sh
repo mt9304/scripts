@@ -79,8 +79,14 @@ EOF
 #################################
 # START: Generate initial files #
 #################################
-for i in {51243..51342}
+emp_iterator=0
+first_emp_id=51243
+last_emp_id=51342
+for i in $(seq $first_emp_id $last_emp_id)
 do
+
+echo 'Generating employee '${emp_iterator}'/99 ('${i}')'
+
 current_date=2018-01
 current_employeeid=${i}
 
@@ -102,6 +108,8 @@ EOF
 cat <<EOF >> compensation_.txt
 ${current_date}|${current_employeeid}|${current_base_salary}|USD
 EOF
+
+((emp_iterator+=1))
 done
 
 ###############################
