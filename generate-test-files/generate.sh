@@ -132,7 +132,7 @@ do
     current_hire_reason=
     current_term_reason=
 
-    echo 'Terminating '${how_many_to_be_termed}' employees for '${d}
+    echo 'Terminating '${how_many_to_be_termed}' and hiring '${how_many_to_be_hired}' employees for '${d}
 
     # For terminating employee
     for i in $(seq 1 $how_many_to_be_termed)
@@ -163,6 +163,8 @@ do
     # For hiring employee
     for i in $(seq 1 $how_many_to_be_hired)
     do
+        echo 'Hiring employee '${emp_id_to_start_hiring}
+
         current_first_name=${list_of_names[$((0 + RANDOM % 29))]}
         current_last_name=${list_of_names[$((0 + RANDOM % 29))]}
         current_job_title=${list_of_job_titles[$((0 + RANDOM % 9))]}
@@ -174,12 +176,17 @@ do
                # Date         | Event Date      | Employee ID
         echo $(basename ${d})\|$(basename ${d})\|${emp_id_to_start_hiring} >> hire_events_.txt        
         
-        # Remember to replace current date in employee profile with directory date, and to modify all
+        echo 'Adding '${emp_id_to_start_hiring}' to employee profile file'
+               # Date        | Employee ID              | Last Name            | First Name          | Job Title           | Department           | Location0           | Ethnicity
+        echo ${current_date}\|${emp_id_to_start_hiring}\|${current_first_name}\|${current_last_name}\|${current_job_title}\|${current_department}\|${current_location0}\|${current_ethnicity} >> employee_profile_.txt  
 
-               # Date         | Employee ID              | Base Salary           | Currency
-        echo $(basename ${d})\|${emp_id_to_start_hiring}\|${current_base_salary}\|'USD' >> hire_events_.txt  
+        echo 'Adding '${emp_id_to_start_hiring}' to compensation file'
+               # Date         | Employee ID             | Base Salary           | Currency
+        echo ${current_date}\|${emp_id_to_start_hiring}\|${current_base_salary}\|'USD' >> compensation_.txt
         ((emp_id_to_start_hiring+=1))
     done
+
+    # Remember to replace current date in employee profile with directory date, and to modify all
 
     # Copying and moving files to dated folders
     cp employee_profile_.txt ${d}employee_profile_$(basename ${d}).txt
@@ -187,6 +194,7 @@ do
     mv term_events_.txt ${d}term_events_$(basename ${d}).txt
     mv hire_events_.txt ${d}hire_events_$(basename ${d}).txt
     echo 'FiscalMonth|EventDate|EmployeeID|TermEvent' > term_events_.txt
+    echo 'Date|Event Date|Employee ID' > hire_events_.txt
 done
 
 # Date         | Event Date          | Employee ID
@@ -194,8 +202,11 @@ cat <<EOF >> hire_events_.txt
 ${current_date}|${current_employeeid}|${current_event_date}
 EOF
 
-# CLeaning up temp files
+# Cleaning up temp files
+rm employee_profile_.txt
+rm compensation_.txt
 rm term_events_.txt
+rm hire_events_.txt
 cd ${current_dir}
 
 ######################################
